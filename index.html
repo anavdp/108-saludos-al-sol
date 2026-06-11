@@ -156,7 +156,7 @@
       <div class="event-pills">
         <span class="pill">📍 Parque El Retiro</span>
         <span class="pill">🕙 10:00 AM</span>
-        <span class="pill">21 Junio · Solsticio</span>
+        <span class="pill">21 Junio · Día del Yoga</span>
       </div>
     </div>
 
@@ -185,7 +185,7 @@
             </select>
             <input type="tel" id="whatsapp" inputmode="numeric" placeholder="612 345 678" autocomplete="tel-national" maxlength="15" />
           </div>
-          <p class="field-error" id="whatsapp-error">Revisa el número: solo dígitos, entre 6 y 12 📱</p>
+          <p class="field-error" id="whatsapp-error"></p>
         </div>
 
         <div class="field">
@@ -234,6 +234,9 @@
         <span class="success-icon">🎉</span>
         <p class="success-title">¡Te esperamos!</p>
         <p class="success-msg">Tu inscripción está confirmada.<br>Nos vemos el <strong>21 de junio</strong> en el Retiro a las <strong>10:00 AM</strong>.<br><br>¡Lleva esterilla y mucha energía! 🧘</p>
+        <button class="submit-btn" onclick="addToCalendar()" style="margin-top: 24px;">
+          📅 Añadir al Calendario
+        </button>
       </div>
     </div>
 
@@ -247,11 +250,50 @@
 </div>
 
 <script>
+function addToCalendar() {
+  const ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//108 Saludos al Sol//ES',
+    'BEGIN:VEVENT',
+    'DTSTART:20260621T080000Z',
+    'DTEND:20260621T100000Z',
+    'SUMMARY:108 Saludos al Sol · 2ª Edición',
+    'LOCATION:Parque El Retiro\\, Madrid',
+    'DESCRIPTION:Día Internacional del Yoga · Clase de 108 Saludos al Sol',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = '108-saludos-al-sol.ics';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 const SHEETS_URL = "https://script.google.com/macros/s/AKfycbxU51k1BuBXfC190fgTAmhdlIDDLDcH80l04pBdLBF0y8mpUoXLT3ANMfbeVl4zNiXw4A/exec";
 
 const whatsappInput = document.getElementById('whatsapp');
 
-// Allow only digits and spaces while typing
+const phoneRules = {
+  '+34':  { min: 9, max: 9,   pattern: /^[67]/,    hint: '9 dígitos, empieza por 6 o 7' },
+  '+54':  { min: 10, max: 10,                       hint: '10 dígitos' },
+  '+39':  { min: 9,  max: 10, pattern: /^3/,        hint: '9-10 dígitos, empieza por 3' },
+  '+33':  { min: 9,  max: 9,  pattern: /^[67]/,     hint: '9 dígitos, empieza por 6 o 7' },
+  '+44':  { min: 10, max: 10, pattern: /^7/,        hint: '10 dígitos, empieza por 7' },
+  '+49':  { min: 10, max: 11, pattern: /^1[5679]/, hint: '10-11 dígitos, empieza por 15, 16, 17 o 19' },
+  '+351': { min: 9,  max: 9,  pattern: /^9/,        hint: '9 dígitos, empieza por 9' },
+  '+52':  { min: 10, max: 10,                       hint: '10 dígitos' },
+  '+57':  { min: 10, max: 10, pattern: /^3/,        hint: '10 dígitos, empieza por 3' },
+  '+58':  { min: 10, max: 11,                       hint: '10-11 dígitos' },
+  '+1':   { min: 10, max: 10,                       hint: '10 dígitos' },
+};
+
 whatsappInput.addEventListener('input', () => {
   whatsappInput.value = whatsappInput.value.replace(/[^\d\s]/g, '');
   whatsappInput.classList.remove('invalid');
@@ -260,20 +302,26 @@ whatsappInput.addEventListener('input', () => {
 
 function validatePhone() {
   const digits = whatsappInput.value.replace(/\D/g, '');
-  return digits.length >= 6 && digits.length <= 12 ? digits : null;
+  const code = document.getElementById('country-code').value;
+  const rule = phoneRules[code] || { min: 6, max: 15 };
+  if (digits.length < rule.min || digits.length > rule.max) return { digits: null, hint: rule.hint };
+  if (rule.pattern && !rule.pattern.test(digits)) return { digits: null, hint: rule.hint };
+  return { digits, hint: null };
 }
 
 async function handleSubmit() {
   const nombre = document.getElementById('nombre').value.trim();
   const countryCode = document.getElementById('country-code').value;
-  const phoneDigits = validatePhone();
+  const { digits: phoneDigits, hint: phoneHint } = validatePhone();
   const nivel = document.querySelector('input[name="nivel"]:checked');
   const fotos = document.querySelector('input[name="fotos"]:checked');
 
   if (!nombre) { alert('Por favor escribe tu nombre 🙂'); return; }
   if (!phoneDigits) {
     whatsappInput.classList.add('invalid');
-    document.getElementById('whatsapp-error').style.display = 'block';
+    const errEl = document.getElementById('whatsapp-error');
+    errEl.textContent = phoneHint ? `Número no válido · ${phoneHint} 📱` : 'Revisa el número 📱';
+    errEl.style.display = 'block';
     whatsappInput.focus();
     return;
   }
@@ -297,7 +345,7 @@ async function handleSubmit() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         nombre: nombre,
-        whatsapp: countryCode + ' ' + phoneDigits,
+        whatsapp: countryCode.slice(1) + ' ' + phoneDigits,
         nivel: nivel.value,
         fotos: fotos.value
       })
