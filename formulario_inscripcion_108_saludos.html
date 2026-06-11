@@ -1,0 +1,257 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@400;600;700;900&display=swap');
+
+  .form-wrap {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(160deg, #FF6B47 0%, #FFD93D 35%, #4ECDC4 70%, #A8E6CF 100%);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .blob { position: absolute; border-radius: 50%; filter: blur(50px); opacity: 0.3; pointer-events: none; }
+  .blob1 { width: 320px; height: 320px; background: #FF6B47; top: -80px; right: -80px; }
+  .blob2 { width: 260px; height: 260px; background: #4ECDC4; bottom: 60px; left: -60px; }
+  .blob3 { width: 180px; height: 180px; background: #FFD93D; top: 40%; right: 10px; }
+
+  .form-inner {
+    position: relative; z-index: 2;
+    max-width: 500px; margin: 0 auto;
+    padding: 32px 20px 48px;
+  }
+
+  .form-header { text-align: center; margin-bottom: 28px; }
+
+  .sun-icon { font-size: 52px; line-height: 1; margin-bottom: 8px; display: block; filter: drop-shadow(0 0 16px rgba(255,217,61,0.7)); }
+
+  .form-title {
+    font-family: 'Bebas Neue', 'Arial Black', sans-serif;
+    font-size: 64px; color: white; line-height: 0.9;
+    letter-spacing: 2px; text-shadow: 0 3px 20px rgba(0,0,0,0.15); margin: 0;
+  }
+
+  .form-subtitle { font-size: 13px; font-weight: 700; letter-spacing: 5px; color: white; text-transform: uppercase; margin: 6px 0 0; opacity: 0.9; }
+
+  .event-pills { display: flex; justify-content: center; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+
+  .pill {
+    background: rgba(255,255,255,0.28); border: 1.5px solid rgba(255,255,255,0.55);
+    border-radius: 100px; padding: 5px 14px; font-size: 12px; font-weight: 600;
+    color: white; letter-spacing: 1px; display: flex; align-items: center; gap: 5px;
+  }
+
+  .form-card {
+    background: rgba(255,255,255,0.22); backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px); border: 1.5px solid rgba(255,255,255,0.45);
+    border-radius: 24px; padding: 28px 24px; margin-top: 20px;
+  }
+
+  .field { margin-bottom: 20px; }
+  .field:last-of-type { margin-bottom: 0; }
+
+  .field label {
+    display: block; font-size: 12px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: white; margin-bottom: 8px; opacity: 0.9;
+  }
+
+  .field input[type="text"], .field input[type="tel"] {
+    width: 100%; padding: 13px 16px; border-radius: 14px;
+    border: 1.5px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.35);
+    color: #2a2a2a; font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 500;
+    outline: none; box-sizing: border-box; transition: border-color 0.2s, background 0.2s;
+  }
+
+  .field input::placeholder { color: rgba(60,60,60,0.55); }
+  .field input:focus { border-color: white; background: rgba(255,255,255,0.55); }
+
+  .radio-group { display: flex; gap: 10px; }
+  .radio-option { flex: 1; }
+  .radio-option input[type="radio"] { display: none; }
+
+  .radio-option label {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 4px; padding: 11px 8px; border-radius: 14px;
+    border: 1.5px solid rgba(255,255,255,0.5); background: rgba(255,255,255,0.25);
+    color: white; font-size: 13px; font-weight: 600; letter-spacing: 0.3px;
+    text-transform: none; cursor: pointer; transition: all 0.18s;
+    margin-bottom: 0; text-align: center; white-space: nowrap;
+  }
+
+  .radio-option label .emoji { font-size: 20px; line-height: 1; }
+  .radio-option input[type="radio"]:checked + label { background: rgba(255,255,255,0.75); color: #e05a30; border-color: white; }
+  .radio-option label:hover { background: rgba(255,255,255,0.4); }
+
+  .divider { height: 1px; background: rgba(255,255,255,0.3); margin: 22px 0; }
+
+  .submit-btn {
+    width: 100%; padding: 16px; border-radius: 16px; border: none;
+    background: white; color: #e05a30; font-family: 'Poppins', sans-serif;
+    font-size: 16px; font-weight: 700; letter-spacing: 1px; cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s; margin-top: 22px; text-transform: uppercase;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+
+  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+  .submit-btn:active { transform: translateY(0); }
+  .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+  .spinner {
+    width: 18px; height: 18px;
+    border: 2.5px solid rgba(224,90,48,0.3);
+    border-top-color: #e05a30;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .form-footer { text-align: center; margin-top: 18px; font-size: 12px; color: rgba(255,255,255,0.75); font-weight: 500; }
+  .form-footer a { color: white; font-weight: 700; text-decoration: none; border-bottom: 1.5px solid rgba(255,255,255,0.5); padding-bottom: 1px; transition: border-color 0.15s, opacity 0.15s; }
+  .form-footer a:hover { border-color: white; opacity: 0.85; }
+
+  .error-msg { background: rgba(255,80,60,0.25); border: 1.5px solid rgba(255,255,255,0.5); border-radius: 12px; padding: 10px 14px; color: white; font-size: 13px; font-weight: 600; margin-top: 14px; display: none; text-align: center; }
+
+  .success-card { display: none; text-align: center; padding: 40px 24px; }
+  .success-icon { font-size: 56px; display: block; margin-bottom: 12px; }
+  .success-title { font-family: 'Bebas Neue', sans-serif; font-size: 42px; color: white; margin: 0 0 8px; }
+  .success-msg { color: white; font-size: 15px; opacity: 0.9; line-height: 1.5; }
+</style>
+
+<div class="form-wrap">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+
+  <div class="form-inner">
+    <div class="form-header">
+      <span class="sun-icon">☀️</span>
+      <h1 class="form-title">108</h1>
+      <p class="form-subtitle">Saludos al Sol · 2ª Edición</p>
+      <div class="event-pills">
+        <span class="pill"><i class="ti ti-map-pin" aria-hidden="true"></i> Parque El Retiro</span>
+        <span class="pill"><i class="ti ti-clock" aria-hidden="true"></i> 10:00 AM</span>
+        <span class="pill">21 Junio · Solsticio</span>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <div id="form-content">
+        <div class="field">
+          <label for="nombre">Nombre completo</label>
+          <input type="text" id="nombre" placeholder="¿Cómo te llamas?" autocomplete="name" />
+        </div>
+
+        <div class="field">
+          <label for="whatsapp">Número de WhatsApp</label>
+          <input type="tel" id="whatsapp" placeholder="+34 6XX XXX XXX" autocomplete="tel" />
+        </div>
+
+        <div class="field">
+          <label>Nivel de yoga</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="nivel" id="nivel1" value="Básico" />
+              <label for="nivel1"><span class="emoji">🌱</span> Básico</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="nivel" id="nivel2" value="Normal" />
+              <label for="nivel2"><span class="emoji">🌿</span> Normal</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="nivel" id="nivel3" value="Pro" />
+              <label for="nivel3"><span class="emoji">🌳</span> Pro</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="field">
+          <label>¿Puedo publicar fotos del evento en donde aparezcas?</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" name="fotos" id="fotos-si" value="Sí" />
+              <label for="fotos-si"><span class="emoji">📸</span> Sí, claro</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" name="fotos" id="fotos-no" value="No" />
+              <label for="fotos-no"><span class="emoji">🙈</span> Prefiero no</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="error-msg" id="error-msg">😅 Algo salió mal, por favor inténtalo de nuevo.</div>
+
+        <button class="submit-btn" id="submit-btn" onclick="handleSubmit()">
+          <span id="btn-text">¡Me apunto! 🌞</span>
+          <div class="spinner" id="spinner"></div>
+        </button>
+      </div>
+
+      <div class="success-card" id="success-card">
+        <span class="success-icon">🎉</span>
+        <p class="success-title">¡Te esperamos!</p>
+        <p class="success-msg">Tu inscripción está confirmada.<br>Nos vemos el <strong>21 de junio</strong> en el Retiro a las <strong>10:00 AM</strong>.<br><br>¡Lleva esterilla y mucha energía! 🧘</p>
+      </div>
+    </div>
+
+    <p class="form-footer">
+      Organizado por
+      <a href="https://instagram.com/vicky.depalma" target="_blank">@vicky.depalma</a>
+      ·
+      <a href="https://instagram.com/eventieluce" target="_blank">@eventieluce</a>
+    </p>
+  </div>
+</div>
+
+<script>
+const SHEETS_URL = "https://script.google.com/macros/s/AKfycbxU51k1BuBXfC190fgTAmhdlIDDLDcH80l04pBdLBF0y8mpUoXLT3ANMfbeVl4zNiXw4A/exec";
+
+async function handleSubmit() {
+  const nombre = document.getElementById('nombre').value.trim();
+  const whatsapp = document.getElementById('whatsapp').value.trim();
+  const nivel = document.querySelector('input[name="nivel"]:checked');
+  const fotos = document.querySelector('input[name="fotos"]:checked');
+
+  if (!nombre) { alert('Por favor escribe tu nombre 🙂'); return; }
+  if (!whatsapp) { alert('Por favor añade tu número de WhatsApp 📱'); return; }
+  if (!nivel) { alert('¿Cuál es tu nivel de yoga? 🧘'); return; }
+  if (!fotos) { alert('Falta responder la pregunta sobre fotos 📸'); return; }
+
+  const btn = document.getElementById('submit-btn');
+  const spinner = document.getElementById('spinner');
+  const btnText = document.getElementById('btn-text');
+  const errorMsg = document.getElementById('error-msg');
+
+  btn.disabled = true;
+  btnText.textContent = 'Enviando...';
+  spinner.style.display = 'block';
+  errorMsg.style.display = 'none';
+
+  try {
+    await fetch(SHEETS_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nombre: nombre,
+        whatsapp: whatsapp,
+        nivel: nivel.value,
+        fotos: fotos.value
+      })
+    });
+
+    document.getElementById('form-content').style.display = 'none';
+    document.getElementById('success-card').style.display = 'block';
+
+  } catch (err) {
+    errorMsg.style.display = 'block';
+    btn.disabled = false;
+    btnText.textContent = '¡Me apunto! 🌞';
+    spinner.style.display = 'none';
+  }
+}
+</script>
