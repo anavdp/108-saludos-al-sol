@@ -33,6 +33,16 @@
 
   .sun-icon { font-size: 52px; line-height: 1; margin-bottom: 8px; display: block; filter: drop-shadow(0 0 16px rgba(255,217,61,0.7)); }
 
+  .title-row {
+    display: flex; align-items: center; justify-content: center; gap: 16px;
+  }
+
+  .organizer-logo {
+    width: 64px; height: 64px; border-radius: 50%;
+    object-fit: cover; flex-shrink: 0;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
+  }
+
   .form-title {
     font-family: 'Bebas Neue', 'Arial Black', sans-serif;
     font-size: 64px; color: white; line-height: 0.9;
@@ -192,7 +202,11 @@
   <div class="form-inner">
     <div class="form-header">
       <span class="sun-icon">☀️</span>
-      <h1 class="form-title">108</h1>
+      <div class="title-row">
+        <img src="vickydepalma.png" alt="Vicky De Palma" class="organizer-logo" />
+        <h1 class="form-title">108</h1>
+        <img src="eventieluce.png" alt="Eventieluce" class="organizer-logo" />
+      </div>
       <p class="form-subtitle">Saludos al Sol · 2ª Edición</p>
       <p class="form-byline">con Vicky De Palma</p>
       <div class="event-pills">
